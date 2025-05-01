@@ -1,0 +1,86 @@
+//DOUBTS//
+//HOW RETURN STATEMENT WORKS//
+You're asking a great question! Let me clarify exactly what happens with the return statement and which function gets called next during backtracking.
+
+The Key Insight
+The return statement doesn't call any function - instead, it returns control back to the previous recursive call in the call stack. This is how backtracking works:
+
+Execution Flow After Printing Solution 1
+Let's continue with your 4-Queens example where we just printed:
+
+Solution 1:
+.  Q1 .  .  
+.  .  .  Q2 
+Q3 .  .  .  
+.  .  Q4 .  
+Current State:
+
+We're in placequeens(board, 4, 4) (because row == n)
+
+We hit the return statement
+
+What return Actually Does:
+
+Doesn't call any new function
+
+Returns execution to where this function was called from:
+
+c
+// This is where we came from in row=3:
+board[3][2] = 'Q';
+placequeens(board, 4, 4);  // We just returned from here
+board[3][2] = '.';  // ← Execution resumes HERE
+Backtracking in Action:
+
+After return, we're back in placequeens(board, 3, 4)
+
+Next line executes: board[3][2] = '.' (removes Q4)
+
+The loop increments j to 3
+
+Checks position (3,3) - finds it's invalid
+
+Loop ends, so this function also hits return
+
+Continuing Backtracking:
+
+Now returns to placequeens(board, 2, 4)
+
+Executes board[2][0] = '.' (removes Q3)
+
+Tries next columns (j=1,2,3) - all invalid
+
+Returns again...
+
+Finding Solution 2:
+
+Eventually backtracks all the way to placequeens(board, 0, 4)
+
+Removes Q1 from (0,1)
+
+Tries next column (j=2) - valid!
+
+Places new Q1 at (0,2)
+
+Begins new recursive sequence that finds Solution 2
+
+Visual Call Stack
+placequeens(0,4)  // Initial call
+   placequeens(1,4)  // Placed Q1
+      placequeens(2,4)  // Placed Q2
+         placequeens(3,4)  // Placed Q3
+            placequeens(4,4)  // Printed solution, then RETURNED
+         // Now back in placequeens(3,4)
+         // Removes Q3, tries next options...
+      // And so on...
+Key Points
+return exits the current function call - it doesn't call anything new
+
+Control returns to where that function was called from
+
+The next line after the recursive call is always the backtracking step (board[row][j] = '.')
+
+This pattern continues until all possibilities are tried
+
+This is how recursive backtracking explores all solutions - by carefully unwinding the call stack and trying alternative paths at each decision point.
+
