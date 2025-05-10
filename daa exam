@@ -1,37 +1,53 @@
-//backtracking//
-//N queens // userinput //
-#include <stdio.h>
-#include <stdbool.h>
+#include<stdio.h>
+#include<stdbool.h>
+#define MAX 10
 
-#define MAX_N 10  // Maximum board size
-
-bool issafe(char board[MAX_N][MAX_N], int row, int col, int n) {
-    // Check vertical (since we're placing row by row, only check above)
-    for (int i = 0; i < row; i++)
-        if (board[i][col] == 'Q') return false;
-
+bool issafe(char board[MAX][MAX], int n, int row, int col)
+{
+    // Check horizontal line
+    for(int j = 0; j < n; j++)
+    {
+        if(board[row][j] == 'Q') return false;
+    }
+    
+    // Check vertical line
+    for(int i = 0; i < n; i++)
+    {
+        if(board[i][col] == 'Q') return false;
+    }
+    
     // Check upper left diagonal
-    for (int i = row, j = col; i >= 0 && j >= 0; i--, j--)
-        if (board[i][j] == 'Q') return false;
-
+    for(int i = row, j = col; i >= 0 && j >= 0; i--, j--)
+    {
+        if(board[i][j] == 'Q') return false;
+    }
+    
     // Check upper right diagonal
-    for (int i = row, j = col; i >= 0 && j < n; i--, j++)
-        if (board[i][j] == 'Q') return false;
-
+    for(int i = row, j = col; i >= 0 && j < n; i--, j++)
+    {
+        if(board[i][j] == 'Q') return false;
+    }
+    
     return true;
 }
 
-void placequeens(char board[MAX_N][MAX_N], int row, int n) {
-    if (row == n) {
-        // Print solution with queen labels
+void placequeens(char board[MAX][MAX], int row, int n)
+{
+    if(row == n)
+    {
         static int count = 1;
         printf("Solution %d:\n", count++);
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (board[i][j] == 'Q') {
-                    printf("Q%d ", i+1);  // Label by row position (Q1 for first row)
-                } else {
-                    printf(".  ");
+        for(int i = 0; i < n; i++)
+        {
+            for(int j = 0; j < n; j++)
+            {
+                if(board[i][j] == 'Q')
+                {
+                    printf("Q%d",i+1);
+                }
+                else
+                {
+                    printf(". ");
                 }
             }
             printf("\n");
@@ -39,9 +55,11 @@ void placequeens(char board[MAX_N][MAX_N], int row, int n) {
         printf("\n");
         return;
     }
-
-    for (int j= 0; j< n; j++) {
-        if (issafe(board, row, j, n)) {
+    
+    for(int j = 0; j < n; j++)
+    {
+        if(issafe(board, n, row, j))
+        {
             board[row][j] = 'Q';
             placequeens(board, row + 1, n);
             board[row][j] = '.';
@@ -49,22 +67,29 @@ void placequeens(char board[MAX_N][MAX_N], int row, int n) {
     }
 }
 
-int main() {
+int main()
+{
     int n;
-    printf("Enter the number of queens (1-%d): ", MAX_N);
+    printf("Enter the number of queens (1-%d): ", MAX);
     scanf("%d", &n);
-
-    if (n < 1 || n > MAX_N) {
-        printf("Invalid input. Please enter between 1 and %d.\n", MAX_N);
+    
+    if(n < 1 || n > MAX)
+    {
+        printf("Invalid input! Please enter a number between 1 and %d.\n", MAX);
         return 1;
     }
-
-    char board[MAX_N][MAX_N];
-    // Initialize board
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
+    
+    char board[MAX][MAX];
+    
+    // Initialize the board
+    for(int i = 0; i < n; i++)
+    {
+        for(int j = 0; j < n; j++)
+        {
             board[i][j] = '.';
-
+        }
+    }
+    
     placequeens(board, 0, n);
     return 0;
 }
